@@ -1,11 +1,15 @@
 window.formic = (formEl) -> new FormicForm(formEl)
 
 class FormicForm
-  constructor: (@formEl) ->
+  constructor: (formEl) ->
+    if formEl instanceof jQuery
+      @formEl = formEl[0]
+    else
+      @formEl = formEl
 
   serialize: ->
     obj = {}
-    for el in @formEl.find('input[name], select[name]')
+    for el in @_getFormElements(@formEl)
       el = $(el)
       @_merge(el.attr('name'), el.val(), obj)
     obj
@@ -13,7 +17,7 @@ class FormicForm
   populate: (attributes) ->
     for key, value of attributes
       key = @_underscoresToDashes(key)
-      @formEl.find("*[name=#{key}]").val(value)
+      $(@formEl).find("*[name=#{key}]").val(value)
 
   _merge: (name, value, obj) ->
     name = @_dashesToUnderscores(name)
@@ -33,3 +37,11 @@ class FormicForm
 
   _underscoresToDashes: (string) ->
     string.replace(/_/g, '-')
+
+  _getFormElements: (el) ->
+    elements = []
+    for tagName in ['input', 'select']
+      for field in el.getElementsByTagName(tagName)
+        elements.push field
+    elements
+
