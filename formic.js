@@ -8,17 +8,20 @@
   FormicForm = (function() {
 
     function FormicForm(formEl) {
-      this.formEl = formEl;
+      if (formEl instanceof jQuery) {
+        this.formEl = formEl[0];
+      } else {
+        this.formEl = formEl;
+      }
     }
 
     FormicForm.prototype.serialize = function() {
       var el, obj, _i, _len, _ref;
       obj = {};
-      _ref = this.formEl.find('input[name], select[name]');
+      _ref = this._getFormElements(this.formEl);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         el = _ref[_i];
-        el = $(el);
-        this._merge(el.attr('name'), el.val(), obj);
+        this._merge(el.name, el.value, obj);
       }
       return obj;
     };
@@ -29,7 +32,7 @@
       for (key in attributes) {
         value = attributes[key];
         key = this._underscoresToDashes(key);
-        _results.push(this.formEl.find("*[name=" + key + "]").val(value));
+        _results.push(this._getFirstElementByName(key).value = value);
       }
       return _results;
     };
@@ -58,6 +61,37 @@
 
     FormicForm.prototype._underscoresToDashes = function(string) {
       return string.replace(/_/g, '-');
+    };
+
+    FormicForm.prototype._getFormElements = function(el) {
+      var elements, field, tagName, _i, _j, _len, _len2, _ref, _ref2;
+      elements = [];
+      _ref = ['input', 'select'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tagName = _ref[_i];
+        _ref2 = el.getElementsByTagName(tagName);
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          field = _ref2[_j];
+          elements.push(field);
+        }
+      }
+      return elements;
+    };
+
+    FormicForm.prototype._getFirstElementByName = function(name) {
+      var el, elements;
+      elements = this._getFormElements(this.formEl);
+      if ((function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+          el = elements[_i];
+          _results.push(el.name === name);
+        }
+        return _results;
+      })()) {
+        return el;
+      }
     };
 
     return FormicForm;
