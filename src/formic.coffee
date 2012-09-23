@@ -10,8 +10,7 @@ class FormicForm
   serialize: ->
     obj = {}
     for el in @_getFormElements(@formEl)
-      el = $(el)
-      @_merge(el.attr('name'), el.val(), obj)
+      @_merge(el.name, el.value, obj)
     obj
 
   populate: (attributes) ->

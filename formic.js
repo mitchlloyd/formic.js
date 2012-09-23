@@ -21,8 +21,7 @@
       _ref = this._getFormElements(this.formEl);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         el = _ref[_i];
-        el = $(el);
-        this._merge(el.attr('name'), el.val(), obj);
+        this._merge(el.name, el.value, obj);
       }
       return obj;
     };
