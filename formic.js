@@ -32,7 +32,7 @@
       for (key in attributes) {
         value = attributes[key];
         key = this._underscoresToDashes(key);
-        _results.push($(this.formEl).find("*[name=" + key + "]").val(value));
+        _results.push(this._getFirstElementByName(key).value = value);
       }
       return _results;
     };
@@ -76,6 +76,22 @@
         }
       }
       return elements;
+    };
+
+    FormicForm.prototype._getFirstElementByName = function(name) {
+      var el, elements;
+      elements = this._getFormElements(this.formEl);
+      if ((function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+          el = elements[_i];
+          _results.push(el.name === name);
+        }
+        return _results;
+      })()) {
+        return el;
+      }
     };
 
     return FormicForm;

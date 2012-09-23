@@ -16,7 +16,7 @@ class FormicForm
   populate: (attributes) ->
     for key, value of attributes
       key = @_underscoresToDashes(key)
-      $(@formEl).find("*[name=#{key}]").val(value)
+      @_getFirstElementByName(key).value = value
 
   _merge: (name, value, obj) ->
     name = @_dashesToUnderscores(name)
@@ -44,3 +44,6 @@ class FormicForm
         elements.push field
     elements
 
+  _getFirstElementByName: (name) ->
+    elements = @_getFormElements(@formEl)
+    return el if el.name is name for el in elements
