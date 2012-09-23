@@ -1,4 +1,4 @@
-#= require ../formic
+chai.should()
 
 describe 'formic', ->
   it 'creates an object from a form', ->
@@ -8,7 +8,7 @@ describe 'formic', ->
       </form>
     """)
 
-    obj = App.formic(formEl).serialize()
+    obj = formic(formEl).serialize()
     obj.attribute_name.should.equal('hi')
 
   it 'handles nested attributes', ->
@@ -19,7 +19,7 @@ describe 'formic', ->
       </form>
     """)
 
-    obj = App.formic(formEl).serialize()
+    obj = formic(formEl).serialize()
     obj.attrs.nested_attr_one.should.equal('hi')
     obj.attrs.nested_attr_two.should.equal('ho')
 
@@ -30,6 +30,6 @@ describe 'formic', ->
       </form>
     """)
 
-    App.formic(formEl).populate(attribute_name: 'hi')
+    formic(formEl).populate(attribute_name: 'hi')
     formEl.find('input')[0].value.should.equal('hi')
 
