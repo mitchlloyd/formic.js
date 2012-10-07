@@ -11,7 +11,7 @@ describe 'formic', ->
     obj = formic(formEl).serialize()
     obj.attribute_name.should.equal('hi')
 
-  it 'handles nested attributes', ->
+  it 'serailizes nested attributes', ->
     formEl = $("""
       <form>
         <input name='attrs:nested-attr-one' value='hi'></input>
@@ -23,7 +23,7 @@ describe 'formic', ->
     obj.attrs.nested_attr_one.should.equal('hi')
     obj.attrs.nested_attr_two.should.equal('ho')
 
-  it "sets the values of form elements", ->
+  it "populates the values of form elements", ->
     formEl = $("""
       <form>
         <input name='attribute-name'></input>
