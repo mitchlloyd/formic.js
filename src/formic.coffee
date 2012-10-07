@@ -14,8 +14,7 @@ class FormicForm
     obj
 
   populate: (attributes) ->
-    for key, value of attributes
-      key = @_underscoresToDashes(key)
+    for key, value of @_buildNames(attributes)
       @_getFirstElementByName(key).value = value
 
   _merge: (name, value, obj) ->
@@ -30,6 +29,21 @@ class FormicForm
       key = keys.shift()
       object[key] or= {}
       @_buildNestedObject(keys, object[key], value)
+
+  _buildNames: (attributes) ->
+    names = {}
+    for key, value of attributes
+      @_buildNestedNames(key, value, names)
+    names
+
+  _buildNestedNames: (key, value, names) ->
+    if typeof value is 'object'
+      console.log 'hello'
+      for localKey, localValue of value
+        @_buildNestedNames("#{key}:#{localKey}", localValue, names)
+    else
+      key = @_underscoresToDashes(key)
+      names[key] = value
 
   _dashesToUnderscores: (string) ->
     string.replace(/-/g, '_')
@@ -46,4 +60,4 @@ class FormicForm
 
   _getFirstElementByName: (name) ->
     elements = @_getFormElements(@formEl)
-    return el if el.name is name for el in elements
+    break el if el.name is name for el in elements

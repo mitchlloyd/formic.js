@@ -33,3 +33,18 @@ describe 'formic', ->
     formic(formEl).populate(attribute_name: 'hi')
     formEl.find('input')[0].value.should.equal('hi')
 
+  it "populates the values of form elements for nested attributes", ->
+    formEl = $("""
+      <form>
+        <input name='parent:attr-one'></input>
+        <input name='parent:attr-two'></input>
+      </form>
+    """)
+
+    formic(formEl).populate({parent:
+      attr_one: 'hi'
+      attr_two: 'ho'
+    })
+    formEl.find('input')[0].value.should.equal('hi')
+    formEl.find('input')[1].value.should.equal('ho')
+

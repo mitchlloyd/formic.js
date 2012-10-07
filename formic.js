@@ -27,11 +27,11 @@
     };
 
     FormicForm.prototype.populate = function(attributes) {
-      var key, value, _results;
+      var key, value, _ref, _results;
+      _ref = this._buildNames(attributes);
       _results = [];
-      for (key in attributes) {
-        value = attributes[key];
-        key = this._underscoresToDashes(key);
+      for (key in _ref) {
+        value = _ref[key];
         _results.push(this._getFirstElementByName(key).value = value);
       }
       return _results;
@@ -52,6 +52,32 @@
         key = keys.shift();
         object[key] || (object[key] = {});
         return this._buildNestedObject(keys, object[key], value);
+      }
+    };
+
+    FormicForm.prototype._buildNames = function(attributes) {
+      var key, names, value;
+      names = {};
+      for (key in attributes) {
+        value = attributes[key];
+        this._buildNestedNames(key, value, names);
+      }
+      return names;
+    };
+
+    FormicForm.prototype._buildNestedNames = function(key, value, names) {
+      var localKey, localValue, _results;
+      if (typeof value === 'object') {
+        console.log('hello');
+        _results = [];
+        for (localKey in value) {
+          localValue = value[localKey];
+          _results.push(this._buildNestedNames("" + key + ":" + localKey, localValue, names));
+        }
+        return _results;
+      } else {
+        key = this._underscoresToDashes(key);
+        return names[key] = value;
       }
     };
 
@@ -79,18 +105,11 @@
     };
 
     FormicForm.prototype._getFirstElementByName = function(name) {
-      var el, elements;
+      var el, elements, _i, _len;
       elements = this._getFormElements(this.formEl);
-      if ((function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = elements.length; _i < _len; _i++) {
-          el = elements[_i];
-          _results.push(el.name === name);
-        }
-        return _results;
-      })()) {
-        return el;
+      for (_i = 0, _len = elements.length; _i < _len; _i++) {
+        el = elements[_i];
+        if (el.name === name) return el;
       }
     };
 
